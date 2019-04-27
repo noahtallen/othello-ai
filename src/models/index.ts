@@ -5,3 +5,8 @@ export enum OthelloCell {
 }
 
 export type OthelloBoard = OthelloCell[][]
+
+export type Scores = {
+    white: number,
+    black: number
+}

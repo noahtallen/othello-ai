@@ -2,44 +2,12 @@ import * as React from 'react';
 import styled from 'styled-components';
 import GameBoard from './GameBoard';
 import GameInfo from './GameInfo'
-import { OthelloCell, OthelloBoard } from './models';
+import { OthelloCell, OthelloBoard, Scores } from './models';
+import * as Othello from './GameBoardHelpers'
 
 type Props = {
     boardSize: number,
     playerColor: OthelloCell
-}
-
-function setInitialCells(board: OthelloBoard, playerColor: OthelloCell): OthelloBoard {
-    // Set the initial game pieces:
-    const center1 = board.length / 2 - 1
-    const center2 = board.length / 2
-    const aiColor = playerColor === OthelloCell.White ? OthelloCell.Black : OthelloCell.White
-    board[center1][center1] = playerColor
-    board[center1][center2] = aiColor
-    board[center2][center1] = aiColor
-    board[center2][center2] = playerColor
-    return board
-}
-
-function generateGameBoard(boardSize: number, playerColor: OthelloCell): OthelloBoard {
-    const getEmpties = () => Array(boardSize).fill(OthelloCell.Empty)
-    // We do a fill and then a map in order to create new instances
-    // of the empties array. Otherwise, each row will reference the
-    // same object in memory.
-    const fullBoard = Array(boardSize).fill(0).map( getEmpties )
-    return setInitialCells(fullBoard, playerColor)
-}
-
-// Call this function to update the board with new info.
-// board is the existing board.
-// i is the row index
-// j is the column index
-// user is the user (i.e. OthelloCell.Black) who "clicked" the cell
-function handleCellClick(board: OthelloBoard, i: number, j: number, user: OthelloCell): OthelloBoard {
-    const newBoard = [ ...board ] // Needs to be a new memory reference or it won't update
-    newBoard[i][j] = user
-    // @TODO: handle the conversion of existing cells
-    return newBoard
 }
 
 export default function GameContainer({ boardSize, playerColor }: Props) {
@@ -48,22 +16,26 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     }
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [gameState, setGameState] = React.useState<OthelloBoard | null>(null)
+    const [score, setScore] = React.useState<Scores>({white: 0, black: 0})
+
     const startGame = () => {
-        setGameState(generateGameBoard(boardSize, playerColor))
+        const newBoard = Othello.generateGameBoard(boardSize, playerColor)
+        setGameState(newBoard)
+        setScore(Othello.countScores(newBoard))
         setIsPlaying(true)
     }
 
     const onClickCell = (i: number, j: number) => {
         if (isPlaying && gameState) {
-            const newBoard = handleCellClick(gameState, i, j, playerColor)
-            console.log(newBoard)
+            const newBoard = Othello.handleCellClick(gameState, i, j, playerColor)
             setGameState(newBoard)    
+            setScore(Othello.countScores(newBoard))
         }
     }
 
     return <Wrapper>
         {!isPlaying && <StartButton onClick={startGame}>Start a Game</StartButton>}
-        {isPlaying && gameState && <GameInfo playerColor={playerColor} />}
+        {isPlaying && gameState && <GameInfo playerColor={playerColor} score={score}/>}
         {isPlaying && gameState && <GameBoard gameState={gameState} onClickCell={onClickCell}/>}
     </Wrapper>
 }
@@ -89,7 +61,7 @@ const Wrapper = styled.div`
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 20px;
