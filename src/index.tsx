@@ -3,20 +3,24 @@ import * as ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import GameContainer from './GameContainer';
 import ErrorBoundary from './ErrorBoundary';
+import { OthelloCell } from './models';
 
-// NOTE: This must be an even number so that
-// the starting tiles can be generated accordingly.
-const BOARD_SIZE = 8
 
-const App = () => (
-  <Background>
+const App = () => {
+  // NOTE: This must be an even number so that
+  // the starting tiles can be generated accordingly.
+  const [boardSize, setBoardSize] = React.useState(8)
+  const [playerColor, setPlayerColor] = React.useState(OthelloCell.White)
+  return (
+    <Background>
     <Title>Welcome to Othello!</Title>
-    <SubTitle>Current board size: {BOARD_SIZE}x{BOARD_SIZE}</SubTitle>
+    <SubTitle>Current board size: {boardSize}x{boardSize}</SubTitle>
     <ErrorBoundary>
-      <GameContainer boardSize={BOARD_SIZE} />
+      <GameContainer boardSize={boardSize} playerColor={playerColor}/>
     </ErrorBoundary>
   </Background>
-)
+  )
+}
 
 const Title = styled.h2`
   margin: 0;
