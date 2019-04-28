@@ -47,6 +47,8 @@ export function countScores(board: OthelloBoard): Scores {
 }
 
 export async function makeAiMove(board: OthelloBoard): Promise<OthelloBoard> {
-    // @TODO fill this in
-    setTimeout(() => Promise.resolve(board), 2000)
+    // @TODO fill this in. Currently simulates a one second wait
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(board), 1000)
+    })
 }

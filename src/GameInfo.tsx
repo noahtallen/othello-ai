@@ -51,7 +51,7 @@ const AbsolutePuckHolder = styled.div`
     margin: 10px;
     padding: 10px;
     position: relative;
-    border: ${({ showBorder }: HolderProps) => showBorder ? '2px solid blue' : 'none'};
+    border: ${({ showBorder }: HolderProps) => showBorder ? '2px solid blue' : '2px solid transparent'};
 `
 type ScoreProps = {
     isWhite: boolean
