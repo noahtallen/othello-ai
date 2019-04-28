@@ -12,12 +12,14 @@
     "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
+    "@babel/runtime": "^7.4.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
     "@types/react": "^16.8.14",
