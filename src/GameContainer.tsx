@@ -14,9 +14,11 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     if (boardSize % 2 !== 0) {
         throw new Error('Board size was not an even number.')
     }
+    const aIColor = playerColor === OthelloCell.Black ? OthelloCell.White : OthelloCell.Black
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [gameState, setGameState] = React.useState<OthelloBoard | null>(null)
     const [score, setScore] = React.useState<Scores>({white: 0, black: 0})
+    const [isAiPlaying, setIsAiPlaying] = React.useState(false)
 
     const startGame = () => {
         const newBoard = Othello.generateGameBoard(boardSize, playerColor)
@@ -25,17 +27,27 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
         setIsPlaying(true)
     }
 
+    const startAiMove = async () => {
+        if (isPlaying && gameState && !isAiPlaying) {
+            setIsAiPlaying(true)
+            const newBoard = await Othello.makeAiMove(gameState)
+            setGameState(newBoard)
+            setIsAiPlaying(false)    
+        }
+    }
+
     const onClickCell = (i: number, j: number) => {
-        if (isPlaying && gameState) {
+        if (isPlaying && gameState && !isAiPlaying) {
             const newBoard = Othello.handleCellClick(gameState, i, j, playerColor)
             setGameState(newBoard)    
             setScore(Othello.countScores(newBoard))
+            startAiMove()
         }
     }
 
     return <Wrapper>
         {!isPlaying && <StartButton onClick={startGame}>Start a Game</StartButton>}
-        {isPlaying && gameState && <GameInfo playerColor={playerColor} score={score}/>}
+        {isPlaying && gameState && <GameInfo playerColor={playerColor} score={score} currentTurn={isAiPlaying ? aIColor : playerColor} />}
         {isPlaying && gameState && <GameBoard gameState={gameState} onClickCell={onClickCell}/>}
     </Wrapper>
 }

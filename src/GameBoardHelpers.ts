@@ -45,3 +45,8 @@ export function countScores(board: OthelloBoard): Scores {
         }
     }, { white: 0, black: 0})
 }
+
+export async function makeAiMove(board: OthelloBoard): Promise<OthelloBoard> {
+    // @TODO fill this in
+    setTimeout(() => Promise.resolve(board), 2000)
+}

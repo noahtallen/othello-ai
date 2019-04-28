@@ -8,7 +8,7 @@ import { OthelloCell } from './models';
 
 const App = () => {
   // NOTE: This must be an even number so that
-  // the starting tiles can be generated accordingly.
+  // the starting tiles can be generated accordingly:
   const [boardSize, setBoardSize] = React.useState(8)
   const [playerColor, setPlayerColor] = React.useState(OthelloCell.White)
   return (

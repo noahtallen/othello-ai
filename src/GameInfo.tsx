@@ -4,16 +4,17 @@ import styled from 'styled-components'
 import { Scores, OthelloCell } from './models'
 
 type Props = {
-    playerColor: OthelloCell,
+    playerColor: OthelloCell
     score: Scores
+    currentTurn: OthelloCell
 }
 
-const GameInfo = ({ playerColor, score }: Props) => (
+const GameInfo = ({ playerColor, score, currentTurn }: Props) => (
     <InfoContainer>
         <h2>Score:</h2>
         <Pucks>
-            <PuckScore playerColor={playerColor} score={score.white} scoreColor={OthelloCell.White}/>
-            <PuckScore playerColor={playerColor} score={score.black} scoreColor={OthelloCell.Black}/>
+            <PuckScore playerColor={playerColor} score={score.white} scoreColor={OthelloCell.White} hasTurn={currentTurn === OthelloCell.White}/>
+            <PuckScore playerColor={playerColor} score={score.black} scoreColor={OthelloCell.Black} hasTurn={currentTurn === OthelloCell.Black}/>
         </Pucks>
     </InfoContainer>
 )
@@ -22,9 +23,10 @@ type PuckScore = {
     playerColor: OthelloCell
     score: number
     scoreColor: OthelloCell
+    hasTurn: boolean
 }
-const PuckScore = ({ playerColor, score, scoreColor}: PuckScore) => (
-    <AbsolutePuckHolder>
+const PuckScore = ({ playerColor, score, scoreColor, hasTurn }: PuckScore) => (
+    <AbsolutePuckHolder showBorder={hasTurn}>
         <Puck isWhite={scoreColor === OthelloCell.White}/>
         <AbsoluteScore isWhite={scoreColor === OthelloCell.White}>{score}</AbsoluteScore>
         <PuckSubInfo>{playerColor === scoreColor ? '(You)' : '(AI)'}</PuckSubInfo>
@@ -41,10 +43,15 @@ const Pucks = styled.div`
     justify-content: space-between;
 `
 
+type HolderProps = {
+    showBorder: boolean
+}
 const AbsolutePuckHolder = styled.div`
     flex: 1;
     margin: 10px;
+    padding: 10px;
     position: relative;
+    border: ${({ showBorder }: HolderProps) => showBorder ? '2px solid blue' : 'none'};
 `
 type ScoreProps = {
     isWhite: boolean
@@ -56,7 +63,7 @@ const AbsoluteScore = styled.div`
     bottom: 0;
     right: 0;
     text-align: center;
-    line-height: 80px;
+    line-height: 100px;
     font-size: 1.7em;
     color: ${({isWhite}: ScoreProps) => isWhite ? 'black' : 'white' };
 `
