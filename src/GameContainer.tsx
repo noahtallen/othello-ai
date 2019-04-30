@@ -53,7 +53,7 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
 
     if(!Reversi.areValidMoves(gameState)) {
         // @TODO: make an actual game over screen
-        setInfoMessage('Game over.')
+        return <h1>Game Over.</h1>
     }
 
     return <Wrapper>
