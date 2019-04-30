@@ -1,7 +1,7 @@
 {
-  "name": "othello-ai",
+  "name": "reversi-ai",
   "version": "1.0.0",
-  "description": "A React implementation of the Reversi (Othello) game, with an AI as your opponent.",
+  "description": "A React implementation of the Reversi game, with an AI as your opponent.",
   "main": "index.js",
   "repository": "git@github.com:noahtallen/othello-ai.git",
   "author": "Noah Allen <noahtallen@gmail.com>",

@@ -1,5 +1,5 @@
 ## About:
-This project is an implementation of the Othello game with an AI opponent for the AI course at Grove City College.
+This project is an implementation of the Reversi game with an AI opponent for the AI course at Grove City College.
 
 ## Setup:
 - Clone project and run `yarn` (or `npm i`)

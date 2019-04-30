@@ -1,34 +1,34 @@
 import * as React from 'react'
 import { Puck } from './GameBoard'
 import styled from 'styled-components'
-import { Scores, OthelloCell } from './models'
+import { Scores, ReversiCell } from './models'
 
 type Props = {
-    playerColor: OthelloCell
+    playerColor: ReversiCell
     score: Scores
-    currentTurn: OthelloCell
+    currentTurn: ReversiCell
 }
 
 const GameInfo = ({ playerColor, score, currentTurn }: Props) => (
     <InfoContainer>
         <Title>Score:</Title>
         <Pucks>
-            <PuckScore playerColor={playerColor} score={score.white} scoreColor={OthelloCell.White} hasTurn={currentTurn === OthelloCell.White}/>
-            <PuckScore playerColor={playerColor} score={score.black} scoreColor={OthelloCell.Black} hasTurn={currentTurn === OthelloCell.Black}/>
+            <PuckScore playerColor={playerColor} score={score.white} scoreColor={ReversiCell.White} hasTurn={currentTurn === ReversiCell.White}/>
+            <PuckScore playerColor={playerColor} score={score.black} scoreColor={ReversiCell.Black} hasTurn={currentTurn === ReversiCell.Black}/>
         </Pucks>
     </InfoContainer>
 )
 
 type PuckScore = {
-    playerColor: OthelloCell
+    playerColor: ReversiCell
     score: number
-    scoreColor: OthelloCell
+    scoreColor: ReversiCell
     hasTurn: boolean
 }
 const PuckScore = ({ playerColor, score, scoreColor, hasTurn }: PuckScore) => (
     <AbsolutePuckHolder showBorder={hasTurn}>
-        <Puck isWhite={scoreColor === OthelloCell.White}/>
-        <AbsoluteScore isWhite={scoreColor === OthelloCell.White}>{score}</AbsoluteScore>
+        <Puck isWhite={scoreColor === ReversiCell.White}/>
+        <AbsoluteScore isWhite={scoreColor === ReversiCell.White}>{score}</AbsoluteScore>
         <PuckSubInfo>{playerColor === scoreColor ? '(You)' : '(AI)'}</PuckSubInfo>
     </AbsolutePuckHolder>
 )

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { OthelloBoard, OthelloCell, Coordinate } from './models';
+import { ReversiBoard, ReversiCell, Coordinate } from './models';
 
 type BoardProps = {
-    gameState: OthelloBoard,
+    gameState: ReversiBoard,
     onClickCell: (coord: Coordinate) => void,
     infoMessage: string
 }
@@ -31,13 +31,13 @@ export default function GameBoard({ gameState, onClickCell, infoMessage }: Board
 }
 
 type CellProps = {
-    cell: OthelloCell,
+    cell: ReversiCell,
     onClick: () => void
 }
 const GameCell = ({ cell, onClick }: CellProps) => {
     let content = null
-    if (cell !== OthelloCell.Empty) {
-        content = <Puck isWhite={cell === OthelloCell.White} />
+    if (cell !== ReversiCell.Empty) {
+        content = <Puck isWhite={cell === ReversiCell.White} />
     }
     return <Cell onClick={onClick}>{content}</Cell>
 }

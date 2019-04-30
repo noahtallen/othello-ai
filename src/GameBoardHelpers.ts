@@ -1,15 +1,15 @@
-import { OthelloBoard, OthelloCell, Scores, Coordinate } from './models'
+import { ReversiBoard, ReversiCell, Scores, Coordinate } from './models'
 import Directions from './Directions'
 
-export function getOppositeCellType(cell: OthelloCell): OthelloCell {
-    return cell === OthelloCell.Black ? OthelloCell.White : OthelloCell.Black
+export function getOppositeCellType(cell: ReversiCell): ReversiCell {
+    return cell === ReversiCell.Black ? ReversiCell.White : ReversiCell.Black
 }
 
-export function setInitialCells(board: OthelloBoard, playerColor: OthelloCell): OthelloBoard {
+export function setInitialCells(board: ReversiBoard, playerColor: ReversiCell): ReversiBoard {
     // Set the initial game pieces:
     const center1 = board.length / 2 - 1
     const center2 = board.length / 2
-    const aiColor = playerColor === OthelloCell.White ? OthelloCell.Black : OthelloCell.White
+    const aiColor = playerColor === ReversiCell.White ? ReversiCell.Black : ReversiCell.White
     board[center1][center1] = playerColor
     board[center1][center2] = aiColor
     board[center2][center1] = aiColor
@@ -17,8 +17,8 @@ export function setInitialCells(board: OthelloBoard, playerColor: OthelloCell): 
     return board
 }
 
-export function generateGameBoard(boardSize: number, playerColor: OthelloCell): OthelloBoard {
-    const getEmpties = () => Array(boardSize).fill(OthelloCell.Empty)
+export function generateGameBoard(boardSize: number, playerColor: ReversiCell): ReversiBoard {
+    const getEmpties = () => Array(boardSize).fill(ReversiCell.Empty)
     // We do a fill and then a map in order to create new instances
     // of the empties array. Otherwise, each row will reference the
     // same object in memory.
@@ -29,10 +29,10 @@ export function generateGameBoard(boardSize: number, playerColor: OthelloCell): 
 // Call this function to update the board with new info.
 // board is the existing board.
 // coord is the clicked coordinate of the cell on the board
-// user is the user (i.e. OthelloCell.Black) who "clicked" the cell
+// user is the user (i.e. ReversiCell.Black) who "clicked" the cell
 // Returns null if the move was invalid
 // Returns the new board if the move was valid
-export function handleCellClick(board: OthelloBoard, coord: Coordinate, user: OthelloCell): OthelloBoard | null {
+export function handleCellClick(board: ReversiBoard, coord: Coordinate, user: ReversiCell): ReversiBoard | null {
     const newBoard = [ ...board ] // Needs to be a new memory reference or it won't update
 
     // If there are no cells to convert, return null because
@@ -50,11 +50,11 @@ export function handleCellClick(board: OthelloBoard, coord: Coordinate, user: Ot
     return newBoard
 }
 
-function getCellsToConvert(board: OthelloBoard, startingCoordinate: Coordinate, placedCellType: OthelloCell): Array<Coordinate> {
+function getCellsToConvert(board: ReversiBoard, startingCoordinate: Coordinate, placedCellType: ReversiCell): Array<Coordinate> {
 
     const oppositeCell = getOppositeCellType(placedCellType)
 
-    function getCell(coord: Coordinate): OthelloCell {
+    function getCell(coord: Coordinate): ReversiCell {
         return board[coord.i][coord.j]
     }
 
@@ -63,7 +63,7 @@ function getCellsToConvert(board: OthelloBoard, startingCoordinate: Coordinate, 
             coord.j < board.length &&
             coord.i >= 0 &&
             coord.j >= 0 &&
-            getCell(coord) !== OthelloCell.Empty
+            getCell(coord) !== ReversiCell.Empty
     }
 
     // Iterates through each of the possible directions away
@@ -88,11 +88,11 @@ function getCellsToConvert(board: OthelloBoard, startingCoordinate: Coordinate, 
     }).flat()
 }
 
-export function countScores(board: OthelloBoard): Scores {
-    const allCells: Array<OthelloCell> = board.flat()
+export function countScores(board: ReversiBoard): Scores {
+    const allCells: Array<ReversiCell> = board.flat()
     return allCells.reduce((total, curCell) => {
-        const isBlack = curCell === OthelloCell.Black
-        const isWhite = curCell === OthelloCell.White
+        const isBlack = curCell === ReversiCell.Black
+        const isWhite = curCell === ReversiCell.White
         return {
             white: isWhite ? total.white + 1 : total.white,
             black: isBlack ? total.black + 1 : total.black
@@ -100,7 +100,7 @@ export function countScores(board: OthelloBoard): Scores {
     }, { white: 0, black: 0})
 }
 
-export async function makeAiMove(board: OthelloBoard): Promise<OthelloBoard> {
+export async function makeAiMove(board: ReversiBoard): Promise<ReversiBoard> {
     // @TODO fill this in. Currently simulates a one second wait
     // Make sure to call `handleCellClick` once we determine which cell to click.
     // `getCellsToConvert` might be helpful for seeing how many possible cells you

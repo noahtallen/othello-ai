@@ -1,10 +1,10 @@
-export enum OthelloCell {
+export enum ReversiCell {
     Black,
     White,
     Empty,
 }
 
-export type OthelloBoard = OthelloCell[][]
+export type ReversiBoard = ReversiCell[][]
 
 export type Scores = {
     white: number,
