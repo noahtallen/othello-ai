@@ -1,10 +1,10 @@
 ## About:
-This project is an implementation of the Reversi game with an AI opponent for the AI course at Grove City College.
+This project is an implementation of the Reversi game with an AI opponent for the AI course at Grove City College. Visit it at [https://gcc-reversi-ai.firebaseapp.com/](https://gcc-reversi-ai.firebaseapp.com/)
 
 ## Setup:
 - Clone project and run `yarn` (or `npm i`)
 - Run `yarn start` (or `npm start`).
-- Run npm start 
+- Visit [localhost:1234](http://localhost:1234)
 
 ## Tools:
 - Using Typescript & React to build the website.
