@@ -38,6 +38,7 @@ const Title = styled.h2`
     margin-top: 0px;
     margin-bottom: 15px;
     line-height: 20px;
+    margin-left: 10px;
 `
 
 const PuckSubInfo = styled.p`
