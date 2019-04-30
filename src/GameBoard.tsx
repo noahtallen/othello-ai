@@ -50,6 +50,9 @@ const TableArea = styled.div`
 const InfoText = styled.p`
     font-style: italic;
     height: 20px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    line-height: 20px;
 `
 
 const Table = styled.table`

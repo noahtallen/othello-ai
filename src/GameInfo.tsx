@@ -11,7 +11,7 @@ type Props = {
 
 const GameInfo = ({ playerColor, score, currentTurn }: Props) => (
     <InfoContainer>
-        <h2>Score:</h2>
+        <Title>Score:</Title>
         <Pucks>
             <PuckScore playerColor={playerColor} score={score.white} scoreColor={OthelloCell.White} hasTurn={currentTurn === OthelloCell.White}/>
             <PuckScore playerColor={playerColor} score={score.black} scoreColor={OthelloCell.Black} hasTurn={currentTurn === OthelloCell.Black}/>
@@ -33,6 +33,13 @@ const PuckScore = ({ playerColor, score, scoreColor, hasTurn }: PuckScore) => (
     </AbsolutePuckHolder>
 )
 
+const Title = styled.h2`
+    height: 20px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    line-height: 20px;
+`
+
 const PuckSubInfo = styled.p`
     font-size: 1.3em;
     text-align: center;
@@ -48,7 +55,8 @@ type HolderProps = {
 }
 const AbsolutePuckHolder = styled.div`
     flex: 1;
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     padding: 10px;
     position: relative;
     border: ${({ showBorder }: HolderProps) => showBorder ? '2px solid blue' : '2px solid transparent'};

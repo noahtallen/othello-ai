@@ -13,8 +13,6 @@ const App = () => {
   const [playerColor, setPlayerColor] = React.useState(OthelloCell.White)
   return (
     <Background>
-    <Title>Welcome to Othello!</Title>
-    <SubTitle>Current board size: {boardSize}x{boardSize}</SubTitle>
     <ErrorBoundary>
       <GameContainer boardSize={boardSize} playerColor={playerColor}/>
     </ErrorBoundary>
@@ -22,15 +20,6 @@ const App = () => {
   )
 }
 
-const Title = styled.h2`
-  margin: 0;
-  padding: 20px;
-  padding-bottom: 0;
-`
-const SubTitle = styled.h4`
-  padding-left: 20px;
-  color: gray;
-`
 const Background = styled.div`
   background-color: white;
 `
