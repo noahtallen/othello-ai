@@ -1,27 +1,33 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { OthelloBoard, OthelloCell } from './models';
+import { OthelloBoard, OthelloCell, Coordinate } from './models';
 
 type BoardProps = {
     gameState: OthelloBoard,
-    onClickCell: (i: number, j: number) => void
+    onClickCell: (coord: Coordinate) => void,
+    infoMessage: string
 }
 
 // Note: I used the indices for keys in this case because the index
 // of an individual cell or row should never change. Though you'd
 // nromally have a real id of some sort, the unique identifier in
 // this case is actually the index!. 
-export default function GameBoard({ gameState, onClickCell }: BoardProps) {
-    return <Table>
-        <tbody>{gameState.map((row, i) =>
-            <tr key={i} >
-                {row.map((cell, j) => {
-                    const boundCellClickHandler = () => onClickCell(i, j)
-                    return <GameCell cell={cell} key={j} onClick={boundCellClickHandler}/>
-                })}
-            </tr>
-        )}</tbody>
-    </Table>
+export default function GameBoard({ gameState, onClickCell, infoMessage }: BoardProps) {
+    return (
+    <TableArea>
+        <InfoText>{infoMessage}</InfoText>
+        <Table>
+            <tbody>{gameState.map((row, i) =>
+                <tr key={i} >
+                    {row.map((cell, j) => {
+                        const boundCellClickHandler = () => onClickCell({i, j})
+                        return <GameCell cell={cell} key={j} onClick={boundCellClickHandler}/>
+                    })}
+                </tr>
+            )}</tbody>
+        </Table>
+    </TableArea>
+    )
 }
 
 type CellProps = {
@@ -35,6 +41,16 @@ const GameCell = ({ cell, onClick }: CellProps) => {
     }
     return <Cell onClick={onClick}>{content}</Cell>
 }
+
+
+const TableArea = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+const InfoText = styled.p`
+    font-style: italic;
+    height: 20px;
+`
 
 const Table = styled.table`
     border-collapse: collapse;
