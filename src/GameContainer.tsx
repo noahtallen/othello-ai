@@ -11,8 +11,8 @@ type Props = {
 }
 
 export default function GameContainer({ boardSize, playerColor }: Props) {
-    if (boardSize % 2 !== 0) {
-        throw new Error('Board size was not an even number.')
+    if (boardSize % 2 !== 0 || boardSize < 0) {
+        throw new Error('Board size is not a valid number.')
     }
     const aIColor = Reversi.getOppositeCellType(playerColor)
     const [gameState, setGameState] = React.useState<ReversiBoard>(Reversi.generateGameBoard(boardSize, playerColor))
@@ -23,11 +23,16 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     const startAiMove = async () => {
         if (!isAiPlaying) {
             setIsAiPlaying(true)
-            const newBoard = await Reversi.makeAiMove(gameState)
-            setGameState(newBoard)
-            setIsAiPlaying(false)    
+            try {
+                setInfoMessage('')
+                const newBoard = await Reversi.makeAiMove(gameState, aIColor)
+                setGameState(newBoard)
+                setScore(Reversi.countScores(newBoard))
+                setIsAiPlaying(false)    
+            } catch (e) {
+                setInfoMessage('The AI couldn\'t make a move')
+            }
         }
-        setInfoMessage('')
     }
 
     const onClickCell = (coord: Coordinate) => {
@@ -44,6 +49,11 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
         } else {
             setInfoMessage('Please wait for the AI to finish.')
         }
+    }
+
+    if(!Reversi.areValidMoves(gameState)) {
+        // @TODO: make an actual game over screen
+        setInfoMessage('Game over.')
     }
 
     return <Wrapper>
