@@ -29,13 +29,13 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     }
 
     const startAiMove = async () => {
-        setInfoMessage('')
         if (isPlaying && gameState && !isAiPlaying) {
             setIsAiPlaying(true)
             const newBoard = await Othello.makeAiMove(gameState)
             setGameState(newBoard)
             setIsAiPlaying(false)    
         }
+        setInfoMessage('')
     }
 
     const onClickCell = (coord: Coordinate) => {
@@ -49,6 +49,9 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
             } else {
                 setInfoMessage('Invalid move. Please try again.')
             }
+        }
+        if (isAiPlaying) {
+            setInfoMessage('Please wait for the AI to finish.')
         }
     }
 
