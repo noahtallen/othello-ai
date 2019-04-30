@@ -61,6 +61,8 @@ function getCellsToConvert(board: OthelloBoard, startingCoordinate: Coordinate, 
     function isValidCell(coord: Coordinate): boolean {
         return coord.i < board.length &&
             coord.j < board.length &&
+            coord.i >= 0 &&
+            coord.j >= 0 &&
             getCell(coord) !== OthelloCell.Empty
     }
 
