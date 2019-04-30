@@ -5,7 +5,6 @@ import GameContainer from './GameContainer';
 import ErrorBoundary from './ErrorBoundary';
 import { ReversiCell } from './models';
 
-
 const App = () => {
   // NOTE: This must be an even number so that
   // the starting tiles can be generated accordingly:
