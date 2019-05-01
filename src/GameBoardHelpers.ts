@@ -74,8 +74,8 @@ function isFilledCell(board: ReversiBoard, coord: Coordinate): boolean {
 }
 
 function getCellsToConvert(board: ReversiBoard, startingCoordinate: Coordinate, placedCellType: ReversiCell): Array<Coordinate> {
-    // Short cut: There are no cells to convert if
-    // you tap on an empty cell
+    // Shortcut: There are no cells to convert if
+    // you tap on a non-empty cell
     if (!isEmptyCell(board, startingCoordinate)) {
         return []
     }

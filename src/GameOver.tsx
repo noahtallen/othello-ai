@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { PuckScore, Pucks } from './GameInfo'
 import styled from 'styled-components'
 import { Scores, ReversiCell } from './models'
 
