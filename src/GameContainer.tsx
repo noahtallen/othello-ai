@@ -51,14 +51,17 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
         }
     }
 
-    if(!Reversi.areValidMoves(gameState)) {
-        // @TODO: make an actual game over screen
-        return <h1>Game Over.</h1>
-    }
-
     return <Wrapper>
-        <GameInfo playerColor={playerColor} score={score} currentTurn={isAiPlaying ? aIColor : playerColor} />
-        <GameBoard gameState={gameState} onClickCell={onClickCell} infoMessage={infoMessage}/>
+        <GameInfo
+            playerColor={playerColor}
+            score={score}
+            currentTurn={isAiPlaying ? aIColor : playerColor} />
+        <GameBoard
+            gameState={gameState}
+            onClickCell={onClickCell}
+            infoMessage={infoMessage}
+            score={score}
+            playerColor={playerColor}/>
     </Wrapper>
 }
 

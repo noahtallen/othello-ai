@@ -25,7 +25,7 @@ type PuckScore = {
     scoreColor: ReversiCell
     hasTurn: boolean
 }
-const PuckScore = ({ playerColor, score, scoreColor, hasTurn }: PuckScore) => (
+export const PuckScore = ({ playerColor, score, scoreColor, hasTurn }: PuckScore) => (
     <AbsolutePuckHolder showBorder={hasTurn}>
         <Puck isWhite={scoreColor === ReversiCell.White}/>
         <AbsoluteScore isWhite={scoreColor === ReversiCell.White}>{score}</AbsoluteScore>
@@ -45,7 +45,7 @@ const PuckSubInfo = styled.p`
     font-size: 1.3em;
     text-align: center;
 `
-const Pucks = styled.div`
+export const Pucks = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;

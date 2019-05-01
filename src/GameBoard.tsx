@@ -1,22 +1,28 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ReversiBoard, ReversiCell, Coordinate } from './models';
+import * as Reversi from './GameBoardHelpers'
+import { ReversiBoard, ReversiCell, Coordinate, Scores } from './models';
+import GameOver from './GameOver';
 
 type BoardProps = {
     gameState: ReversiBoard,
     onClickCell: (coord: Coordinate) => void,
     infoMessage: string
+    score: Scores
+    playerColor: ReversiCell
 }
 
 // Note: I used the indices for keys in this case because the index
 // of an individual cell or row should never change. Though you'd
 // nromally have a real id of some sort, the unique identifier in
 // this case is actually the index!. 
-export default function GameBoard({ gameState, onClickCell, infoMessage }: BoardProps) {
+export default function GameBoard({ gameState, onClickCell, infoMessage, score, playerColor }: BoardProps) {
+    
     return (
     <TableArea>
         <InfoText>{infoMessage}</InfoText>
         <Table>
+            {!Reversi.areValidMoves(gameState) && <GameOver score={score} playerColor={playerColor}/> }
             <tbody>{gameState.map((row, i) =>
                 <tr key={i} >
                     {row.map((cell, j) => {
@@ -58,6 +64,7 @@ const InfoText = styled.p`
 const Table = styled.table`
     border-collapse: collapse;
     border-spacing: 0px;
+    position: relative;
 `
 const cellSize = 100
 const Cell = styled.td`
