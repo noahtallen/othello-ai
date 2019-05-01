@@ -117,28 +117,31 @@ export function countScores(board: ReversiBoard): Scores {
 }
 
 export async function makeAiMove(board: ReversiBoard, aiColor: ReversiCell): Promise<ReversiBoard> {
-    // @TODO fill this in. Currently simulates a one second wait
+    // @TODO fill this in.
     // Make sure to call `handleCellClick` once we determine which cell to click.
     // `getCellsToConvert` might be helpful for seeing how many possible cells you
     // could convert from a move
-    let didMove = false
     return new Promise((resolve, reject) => {
-        for (let i = 0; i < board.length; i++) {
-            if (didMove) {
-                break
-            }
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j] === ReversiCell.Empty) {
-                    const newBoard = handleCellClick(board, {i, j}, aiColor)
-                    if (newBoard) {
-                        resolve(newBoard)
-                        didMove = true
-                        break
-                    }    
+        setTimeout(() => {
+            let didMove = false
+            for (let i = 0; i < board.length; i++) {
+                if (didMove) {
+                    break
+                }
+                for (let j = 0; j < board.length; j++) {
+                    if (board[i][j] === ReversiCell.Empty) {
+                        const newBoard = handleCellClick(board, {i, j}, aiColor)
+                        if (newBoard) {
+                            resolve(newBoard)
+                            didMove = true
+                            break
+                        }    
+                    }
                 }
             }
-        }
-        reject(new Error('No cells found for the AI'))
+            reject(new Error('No cells found for the AI'))    
+        }, 500);
+    
     })
 }
 
