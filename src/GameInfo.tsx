@@ -72,7 +72,7 @@ const AbsoluteScore = styled.div`
     bottom: 0;
     right: 0;
     text-align: center;
-    line-height: 100px;
+    line-height: 70px;
     font-size: 1.7em;
     color: ${({isWhite}: ScoreProps) => isWhite ? 'black' : 'white' };
 `

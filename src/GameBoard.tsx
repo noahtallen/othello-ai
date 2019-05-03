@@ -66,7 +66,7 @@ const Table = styled.table`
     border-spacing: 0px;
     position: relative;
 `
-const cellSize = 100
+const cellSize = 70
 const Cell = styled.td`
     width: ${cellSize}px;
     height: ${cellSize}px;
