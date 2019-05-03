@@ -46,7 +46,6 @@ const StartArea = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 100px;
-
 `
 const StartButton = styled.button`
     width: 200px;
