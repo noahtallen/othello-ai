@@ -51,11 +51,11 @@ export default function GameContainer({ boardSize, playerColor, aiKind }: Props)
             setInfoMessage('Please wait for the AI to finish.')
         }
     }
-
     return <Wrapper>
         <GameInfo
             playerColor={playerColor}
             score={score}
+            aiKind={aiKind}
             currentTurn={isAiPlaying ? aIColor : playerColor} />
         <GameBoard
             gameState={gameState}
