@@ -1,19 +1,33 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import StartButton from './StartButton';
 
+type ErrorProps = {
+    setIsPlaying: (isPlaying: boolean) => void
+}
 type ErrorState = {
     errorMessage: null | string
 }
 
-export default class ErrorBoundary extends React.Component<{}, ErrorState> {
+export default class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
     state: ErrorState = {
         errorMessage: null
     }
+
+    backToStart = () => {
+        this.props.setIsPlaying(false)
+    }
+
     render() {
         const { errorMessage } = this.state
         if (errorMessage) {
             // Show Error Message:
-            return <Error>An unexpected error occured: {errorMessage}</Error>
+            return (
+                <Container>
+                    <Error>An unexpected error occured: {errorMessage}</Error>
+                    <StartButton onClick={this.backToStart}>Back to Start</StartButton>
+                </Container>
+            )
         }
 
         // Otherwise show children:
@@ -25,6 +39,13 @@ export default class ErrorBoundary extends React.Component<{}, ErrorState> {
     }
 }
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+`
 const Error = styled.div`
     color: red;
     font-size: 1.4em;
@@ -34,4 +55,5 @@ const Error = styled.div`
     margin-right: auto;
     display: flex;
     padding-left: 20px;
+    margin: 50px;
 `

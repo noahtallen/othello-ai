@@ -2,33 +2,39 @@ import * as React from 'react'
 import { Puck } from './GameBoard'
 import styled from 'styled-components'
 import { Scores, ReversiCell, AIKind } from './models'
+import StartButton from './StartButton'
 
 type Props = {
     playerColor: ReversiCell
     score: Scores
     currentTurn: ReversiCell
     aiKind: AIKind
+    setIsPlaying: (isPlaying: boolean) => void
 }
 
-const GameInfo = ({ playerColor, score, currentTurn, aiKind }: Props) => (
-    <InfoContainer>
-        <Title>Score:</Title>
-        <Pucks>
-            <PuckScore
-                playerColor={playerColor}
-                score={score.white}
-                scoreColor={ReversiCell.White}
-                aiKind={aiKind}
-                hasTurn={currentTurn === ReversiCell.White}/>
-            <PuckScore
-                playerColor={playerColor}
-                score={score.black}
-                aiKind={aiKind}
-                scoreColor={ReversiCell.Black}
-                hasTurn={currentTurn === ReversiCell.Black}/>
-        </Pucks>
-    </InfoContainer>
-)
+const GameInfo = ({ playerColor, score, currentTurn, aiKind, setIsPlaying }: Props) => {
+    const goToStart = () => setIsPlaying(false)
+    return (
+        <InfoContainer>
+            <Title>Score:</Title>
+            <Pucks>
+                <PuckScore
+                    playerColor={playerColor}
+                    score={score.white}
+                    scoreColor={ReversiCell.White}
+                    aiKind={aiKind}
+                    hasTurn={currentTurn === ReversiCell.White}/>
+                <PuckScore
+                    playerColor={playerColor}
+                    score={score.black}
+                    aiKind={aiKind}
+                    scoreColor={ReversiCell.Black}
+                    hasTurn={currentTurn === ReversiCell.Black}/>
+            </Pucks>
+            <StartButton onClick={goToStart}>Start Over</StartButton>
+        </InfoContainer>
+    )
+}
 
 type PuckScore = {
     playerColor: ReversiCell

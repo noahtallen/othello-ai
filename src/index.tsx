@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import GameContainer from './GameContainer';
 import ErrorBoundary from './ErrorBoundary';
 import { ReversiCell, AIKind } from './models';
+import StartButton from './StartButton';
 
 const AIKindNames: { [kind: number]: string } = {
   [AIKind.PickFirst]: "Make First Available Move",
@@ -28,8 +29,12 @@ const App = () => {
   if (isPlaying) {
     return (
       <Background>
-      <ErrorBoundary>
-        <GameContainer boardSize={boardSize} playerColor={playerColor} aiKind={aiKind}/>
+      <ErrorBoundary setIsPlaying={setIsPlaying}>
+        <GameContainer
+          boardSize={boardSize}
+          playerColor={playerColor}
+          setIsPlaying={setIsPlaying}
+          aiKind={aiKind}/>
       </ErrorBoundary>
       </Background>
     )
@@ -80,21 +85,6 @@ const StartArea = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 100px;
-`
-const StartButton = styled.button`
-    width: 200px;
-    cursor: pointer;
-    height: 60px;
-    border-radius: 4px;
-    background-color: black;
-    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
-    border: none;
-    font-weight: bold;
-    color: white;
-    font-size: 1.4em;
-    &:hover {
-        background-color: gray;
-    }
 `
 
 const Background = styled.div`

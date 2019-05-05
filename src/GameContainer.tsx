@@ -9,9 +9,10 @@ type Props = {
     boardSize: number
     playerColor: ReversiCell
     aiKind: AIKind
+    setIsPlaying: (isPlaying: boolean) => void
 }
 
-export default function GameContainer({ boardSize, playerColor, aiKind }: Props) {
+export default function GameContainer({ boardSize, playerColor, aiKind, setIsPlaying }: Props) {
     if (boardSize % 2 !== 0 || boardSize < 0) {
         throw new Error('Board size is not a valid number.')
     }
@@ -61,6 +62,7 @@ export default function GameContainer({ boardSize, playerColor, aiKind }: Props)
             playerColor={playerColor}
             score={score}
             aiKind={aiKind}
+            setIsPlaying={setIsPlaying}
             currentTurn={isPlayer2Turn ? player2Color : playerColor} />
         <GameBoard
             gameState={gameState}
