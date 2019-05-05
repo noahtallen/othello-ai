@@ -18,7 +18,6 @@ type BoardProps = {
 // nromally have a real id of some sort, the unique identifier in
 // this case is actually the index!. 
 export default function GameBoard({ isAiPlaying, gameState, onClickCell, infoMessage, score, playerColor }: BoardProps) {
-    
     return (
     <TableArea>
         <InfoText>{infoMessage}</InfoText>

@@ -6,11 +6,12 @@ import { ReversiCell, ReversiBoard, Scores, Coordinate, AIKind } from './models'
 import * as Reversi from './GameBoardHelpers'
 
 type Props = {
-    boardSize: number,
+    boardSize: number
     playerColor: ReversiCell
+    aiKind: AIKind
 }
 
-export default function GameContainer({ boardSize, playerColor }: Props) {
+export default function GameContainer({ boardSize, playerColor, aiKind }: Props) {
     if (boardSize % 2 !== 0 || boardSize < 0) {
         throw new Error('Board size is not a valid number.')
     }
@@ -19,7 +20,6 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     const [score, setScore] = React.useState<Scores>(Reversi.countScores(gameState))
     const [isAiPlaying, setIsAiPlaying] = React.useState(false)
     const [infoMessage, setInfoMessage] = React.useState<string>('')
-    const [aiKind, setAIKind] = React.useState<AIKind>(AIKind.PickFirst)
 
     const startAiMove = async () => {
         if (!isAiPlaying) {
@@ -56,8 +56,6 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
         <GameInfo
             playerColor={playerColor}
             score={score}
-            aiKind={aiKind}
-            setAIKind={setAIKind}
             currentTurn={isAiPlaying ? aIColor : playerColor} />
         <GameBoard
             gameState={gameState}
