@@ -10,19 +10,20 @@ type BoardProps = {
     infoMessage: string
     score: Scores
     playerColor: ReversiCell
+    isAiPlaying: boolean
 }
 
 // Note: I used the indices for keys in this case because the index
 // of an individual cell or row should never change. Though you'd
 // nromally have a real id of some sort, the unique identifier in
 // this case is actually the index!. 
-export default function GameBoard({ gameState, onClickCell, infoMessage, score, playerColor }: BoardProps) {
+export default function GameBoard({ isAiPlaying, gameState, onClickCell, infoMessage, score, playerColor }: BoardProps) {
     
     return (
     <TableArea>
         <InfoText>{infoMessage}</InfoText>
         <Table>
-            {!Reversi.areValidMoves(gameState) && <GameOver score={score} playerColor={playerColor}/> }
+            {!isAiPlaying && !Reversi.areValidMoves(gameState) && <GameOver score={score} playerColor={playerColor}/> }
             <tbody>{gameState.map((row, i) =>
                 <tr key={i} >
                     {row.map((cell, j) => {
@@ -54,10 +55,11 @@ const TableArea = styled.div`
     flex-direction: column;
 `
 const InfoText = styled.p`
-    font-style: italic;
+    font-size: 15px;
     height: 20px;
     margin-top: 0px;
     margin-bottom: 15px;
+    color: #9F2042;
     line-height: 20px;
 `
 

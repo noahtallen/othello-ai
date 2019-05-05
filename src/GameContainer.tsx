@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import GameBoard from './GameBoard';
 import GameInfo from './GameInfo'
-import { ReversiCell, ReversiBoard, Scores, Coordinate } from './models';
+import { ReversiCell, ReversiBoard, Scores, Coordinate, AIKind } from './models';
 import * as Reversi from './GameBoardHelpers'
 
 type Props = {
@@ -19,19 +19,20 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
     const [score, setScore] = React.useState<Scores>(Reversi.countScores(gameState))
     const [isAiPlaying, setIsAiPlaying] = React.useState(false)
     const [infoMessage, setInfoMessage] = React.useState<string>('')
+    const [aiKind, setAIKind] = React.useState<AIKind>(AIKind.PickFirst)
 
     const startAiMove = async () => {
         if (!isAiPlaying) {
             setIsAiPlaying(true)
             try {
                 setInfoMessage('')
-                const newBoard = await Reversi.makeAiMove(gameState, aIColor)
+                const newBoard = await Reversi.makeAiMove(gameState, aiKind, aIColor)
                 setGameState(newBoard)
                 setScore(Reversi.countScores(newBoard))
-                setIsAiPlaying(false)    
             } catch (e) {
                 setInfoMessage('The AI couldn\'t make a move')
             }
+            setIsAiPlaying(false)
         }
     }
 
@@ -55,10 +56,13 @@ export default function GameContainer({ boardSize, playerColor }: Props) {
         <GameInfo
             playerColor={playerColor}
             score={score}
+            aiKind={aiKind}
+            setAIKind={setAIKind}
             currentTurn={isAiPlaying ? aIColor : playerColor} />
         <GameBoard
             gameState={gameState}
             onClickCell={onClickCell}
+            isAiPlaying={isAiPlaying}
             infoMessage={infoMessage}
             score={score}
             playerColor={playerColor}/>

@@ -17,3 +17,7 @@ export type Coordinate = {
 }
 
 export type Direction = (coord: Coordinate) => Coordinate
+
+export enum AIKind {
+    PickFirst,
+}

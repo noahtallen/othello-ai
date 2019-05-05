@@ -1,4 +1,4 @@
-import { ReversiBoard, ReversiCell, Scores, Coordinate } from './models'
+import { ReversiBoard, ReversiCell, Scores, Coordinate, AIKind } from './models'
 import Directions from './Directions'
 
 export function getOppositeCellType(cell: ReversiCell): ReversiCell {
@@ -116,32 +116,40 @@ export function countScores(board: ReversiBoard): Scores {
     }, { white: 0, black: 0})
 }
 
-export async function makeAiMove(board: ReversiBoard, aiColor: ReversiCell): Promise<ReversiBoard> {
+const aiFunctions: { [kind: number]: (board: ReversiBoard, aiColor: ReversiCell) => ReversiBoard | null } = {
+    [AIKind.PickFirst]: (board, aiColor) => {
+        for (let i = 0; i < board.length; i++)
+        for (let j = 0; j < board.length; j++) {
+            if (board[i][j] === ReversiCell.Empty) {
+                const newBoard = handleCellClick(board, {i, j}, aiColor)
+                if (newBoard)
+                    return newBoard
+            }
+        }
+
+        return null
+    },
+}
+
+export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: ReversiCell): Promise<ReversiBoard> {
     // @TODO fill this in.
     // Make sure to call `handleCellClick` once we determine which cell to click.
     // `getCellsToConvert` might be helpful for seeing how many possible cells you
     // could convert from a move
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            let didMove = false
-            for (let i = 0; i < board.length; i++) {
-                if (didMove) {
-                    break
-                }
-                for (let j = 0; j < board.length; j++) {
-                    if (board[i][j] === ReversiCell.Empty) {
-                        const newBoard = handleCellClick(board, {i, j}, aiColor)
-                        if (newBoard) {
-                            resolve(newBoard)
-                            didMove = true
-                            break
-                        }    
-                    }
-                }
+            let aiFunc = aiFunctions[aiKind];
+            if (!aiFunc) {
+                reject(new Error('AI "' + AIKind[aiKind]  + '" not supported.'))
+                return
             }
-            reject(new Error('No cells found for the AI'))    
+
+            let newBoard = aiFunc(board, aiColor);
+            if (newBoard)
+                resolve(newBoard)
+            else
+                reject(new Error('No cells found for the AI'))
         }, 500);
-    
     })
 }
 
