@@ -76,7 +76,9 @@ const Title = styled.h2`
 
 const PuckSubInfo = styled.p`
     font-size: 1.3em;
+    margin-bottom: 0;
     text-align: center;
+    font-weight: normal;
 `
 export const Pucks = styled.div`
     display: flex;
