@@ -43,7 +43,6 @@ const App = () => {
       <Background>
       <StartArea>
         <MainTitle>Welcome to Reversi</MainTitle>
-        <h2>AI:</h2>
         <AIKindPicker selected={aiKind} setAIKind={setAIKind} />
         <StartButton onClick={startGame}>Start a Game</StartButton>
       </StartArea>
@@ -53,22 +52,32 @@ const App = () => {
 }
 
 const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }) => {
-  var options = Object.keys(AIKind)
+  const options = Object.keys(AIKind)
       .filter(key => !isNaN(Number(key)))
       .map((key: any) =>
           <option key={key} value={key}>{AIKindNames[key] || AIKind[key]}</option>
       )
 
   return (
-      <AIKindDropdown
+     <HorizontalHolder>
+       <h2>Ai:</h2>
+       <AIKindDropdown
           onChange={val => props.setAIKind(val.target.selectedIndex as AIKind)}
           value={props.selected}>{options}</AIKindDropdown>
+    </HorizontalHolder>
   )
 }
 
+const HorizontalHolder = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  align-items: center;
+`
+
 const AIKindDropdown = styled.select`
     font-size: 14px;
-    margin: 0 10px 10px 10px;
+    margin: 0px 0px 0px 15px;
 `
 
 const AIKindContainer = styled.div`
