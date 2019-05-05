@@ -117,6 +117,7 @@ export function countScores(board: ReversiBoard): Scores {
 }
 
 const aiFunctions: { [kind: number]: (board: ReversiBoard, aiColor: ReversiCell) => ReversiBoard | null } = {
+    [AIKind.Human]: (board, aiColor) => { return null },
     [AIKind.PickFirst]: (board, aiColor) => {
         for (let i = 0; i < board.length; i++)
         for (let j = 0; j < board.length; j++) {
@@ -127,6 +128,10 @@ const aiFunctions: { [kind: number]: (board: ReversiBoard, aiColor: ReversiCell)
             }
         }
 
+        return null
+    },
+    [AIKind.MinMaxTree]: (board, aiColor) => {
+        // TODO
         return null
     },
 }

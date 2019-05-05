@@ -76,6 +76,10 @@ const Cell = styled.td`
     padding: 0px;
     margin: 0;
     text-align: center;
+
+    :hover {
+        background-color: #eee;
+    }
 `
 
 type PuckProps = {

@@ -13,12 +13,15 @@ type Props = {
 
 const AIKindNames: { [kind: number]: string } = {
     [AIKind.PickFirst]: "Make First Available Move",
+    [AIKind.MinMaxTree]: "Min Max Tree",
+    [AIKind.Human]: "Human",
 }
 
 const GameInfo = ({ playerColor, score, currentTurn, aiKind, setAIKind }: Props) => (
     <InfoContainer>
         <Title>AI:</Title>
         <AIKindPicker selected={aiKind} setAIKind={setAIKind} />
+
         <Title>Score:</Title>
         <Pucks>
             <PuckScore playerColor={playerColor} score={score.white} scoreColor={ReversiCell.White} hasTurn={currentTurn === ReversiCell.White}/>
@@ -37,7 +40,7 @@ const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }
     return (
         <AIKindDropdown
             onChange={val => props.setAIKind(val.target.selectedIndex as AIKind)}
-            value={props.selected}>{options}</select>
+            value={props.selected}>{options}</AIKindDropdown>
     )
 }
 
