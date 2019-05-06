@@ -198,7 +198,7 @@ function findBestMinimaxChild(children: ReversiBoard[], aiColor: ReversiCell, he
 }
 
 
-export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: ReversiCell): Promise<ReversiBoard> {
+export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: ReversiCell, trackTime: boolean = true): Promise<ReversiBoard> {
     // @TODO fill this in.
     // Make sure to call `applyMove` once we determine which cell to click.
     // `getCellsToConvert` might be helpful for seeing how many possible cells you
@@ -211,13 +211,24 @@ export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: R
                 return
             }
 
+            if (trackTime) {
+                console.time('ai_turn_execution_time')
+            }
             let newBoard = aiFunc(board, aiColor);
+            if (trackTime && newBoard) {
+                console.timeEnd('ai_turn_execution_time')
+                console.log(`Number of Filled Cells: ${getNumberOfFilledCells(newBoard)}`)
+            }
             if (newBoard)
                 resolve(newBoard)
             else
                 reject(new Error('No cells found for the AI'))
         }, 500);
     })
+}
+
+export function getNumberOfFilledCells(board: ReversiBoard): number {
+    return board.flat().reduce((total, curCell) => total + (curCell !== ReversiCell.Empty ? 1 : 0), 0)
 }
 
 export function areValidMoves(board: ReversiBoard): boolean {
