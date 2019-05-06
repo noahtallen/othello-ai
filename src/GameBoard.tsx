@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import * as Reversi from './GameBoardHelpers'
 import { ReversiBoard, ReversiCell, Coordinate, Scores } from './models';
 import GameOver from './GameOver';
 
