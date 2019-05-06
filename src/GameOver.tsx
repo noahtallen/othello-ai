@@ -8,7 +8,7 @@ type Props = {
 }
 
 const GameOver = ({ score, playerColor }: Props) => {
-    const didWin = playerColor === ReversiCell.Black ? score.black >= score.white : score.white > score.black
+    const didWin = playerColor === ReversiCell.Black ? score[ReversiCell.Black] >= score[ReversiCell.White] : score[ReversiCell.White] > score[ReversiCell.Black]
     return (
         <Overlay>
             <h1>Game Over</h1>
