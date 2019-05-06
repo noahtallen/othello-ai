@@ -20,13 +20,13 @@ const GameInfo = ({ playerColor, score, currentTurn, aiKind, setIsPlaying }: Pro
             <Pucks>
                 <PuckScore
                     playerColor={playerColor}
-                    score={score.white}
+                    score={score[ReversiCell.White]}
                     scoreColor={ReversiCell.White}
                     aiKind={aiKind}
                     hasTurn={currentTurn === ReversiCell.White}/>
                 <PuckScore
                     playerColor={playerColor}
-                    score={score.black}
+                    score={score[ReversiCell.Black]}
                     aiKind={aiKind}
                     scoreColor={ReversiCell.Black}
                     hasTurn={currentTurn === ReversiCell.Black}/>
