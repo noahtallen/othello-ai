@@ -170,8 +170,8 @@ const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
         let theirCorners = getCornersCaptured(board, otherPlayer)
 
         let puckPairity = (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
-        let mobility = (myMoves - theirMoves) / Math.min(1, myMoves + theirMoves)
-        let cornersCaptured = (myCorners - theirCorners) / Math.min(1, myCorners + theirCorners)
+        let mobility = (myMoves - theirMoves) / Math.max(1, myMoves + theirMoves)
+        let cornersCaptured = (myCorners - theirCorners) / Math.max(1, myCorners + theirCorners)
 
         return puckPairity + 2*mobility + 3*cornersCaptured
     }
