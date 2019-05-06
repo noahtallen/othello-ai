@@ -21,19 +21,24 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
     const [score, setScore] = React.useState<Scores>(Reversi.countScores(gameState))
     const [isPlayer2Turn, setisPlayer2Turn] = React.useState(false)
     const [infoMessage, setInfoMessage] = React.useState<string>('')
+    const [isGameOver, setIsGameOver] = React.useState(false)
 
     const startAiMove = async (gameState: ReversiBoard) => {
         if (!isPlayer2Turn) {
             setisPlayer2Turn(true)
+            // Check for the AI:
+            preTurnCheck(true, gameState)
             try {
                 setInfoMessage('')
                 const newBoard = await Reversi.makeAiMove(gameState, aiKind, player2Color)
                 setGameState(newBoard)
                 setScore(Reversi.countScores(newBoard))
+                setisPlayer2Turn(false)
+                // Check once it's back to the current player:
+                preTurnCheck(false, newBoard)    
             } catch (e) {
                 setInfoMessage('The AI couldn\'t make a move')
             }
-            setisPlayer2Turn(false)
         }
     }
 
@@ -49,6 +54,8 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                     startAiMove(newBoard)    
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
+                    // Check for the next player if it's human vs human:
+                    preTurnCheck(!isPlayer2Turn, newBoard)
                 }
             } else {
                 setInfoMessage('Invalid move. Please try again.')
@@ -57,6 +64,27 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
             setInfoMessage('Please wait for the AI to finish.')
         }
     }
+
+    const preTurnCheck = (isPlayer2Turn: boolean, gameState: ReversiBoard) => {
+        const curPlayer = isPlayer2Turn ? player2Color : playerColor
+        const otherPlayer = isPlayer2Turn ? playerColor : player2Color
+        const areValidMoves = Reversi.doesPlayerHaveValidMoves(gameState, curPlayer)
+        if (!areValidMoves) {
+            const canOtherPlayerMove = Reversi.doesPlayerHaveValidMoves(gameState, otherPlayer)
+            if (canOtherPlayerMove) {
+                // Give turn back to other player since you can't play
+                if (aiKind !== AIKind.Human) {
+                    startAiMove(gameState)
+                } else {
+                    setisPlayer2Turn(!isPlayer2Turn)
+                }
+            } else {
+                // Game Over if neither party can  make moves at this point
+                setIsGameOver(true)
+            }
+        }
+    }
+
     return <Wrapper>
         <GameInfo
             playerColor={playerColor}
@@ -67,7 +95,7 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
         <GameBoard
             gameState={gameState}
             onClickCell={onClickCell}
-            isAiPlaying={isPlayer2Turn}
+            isGameOver={isGameOver}
             infoMessage={infoMessage}
             score={score}
             playerColor={playerColor}/>

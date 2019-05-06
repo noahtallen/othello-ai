@@ -279,3 +279,14 @@ export function areValidMoves(board: ReversiBoard): boolean {
     }
     return blackHasMoves && whiteHasMoves
 }
+
+export function doesPlayerHaveValidMoves(board: ReversiBoard, player: ReversiCell): boolean {
+    for (let i = 0; i < board.length; i++)
+    for (let j = 0; j < board.length; j++) {
+        const validMoves = getCellsToConvert(board, {i, j}, player)
+        if (validMoves.length) {
+            return true
+        }
+    }
+    return false
+}
