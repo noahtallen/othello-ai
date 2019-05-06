@@ -149,14 +149,31 @@ function getAllPossibleMoves(board: ReversiBoard, aiColor: ReversiCell): Reversi
     return result
 }
 
+function getCornersCaptured(board: ReversiBoard, player: ReversiCell): number {
+    return Number(board[0][0] == player)
+         + Number(board[board.length - 1][0] == player)
+         + Number(board[0][board.length - 1] == player)
+         + Number(board[board.length - 1][board.length - 1] == player)
+}
+
 // https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-reversiothello/
 type HeuristicFunc = (board: ReversiBoard, aiColor: ReversiCell) => number
 const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
     [HeuristicKind.PuckPairity]: (board, aiColor) => {
         let score = countScores(board)
         let otherPlayer = getOppositeCellType(aiColor)
-    
-        return (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
+
+        let myMoves = getAllPossibleMoves(board, aiColor).length
+        let theirMoves = getAllPossibleMoves(board, otherPlayer).length
+
+        let myCorners = getCornersCaptured(board, aiColor)
+        let theirCorners = getCornersCaptured(board, otherPlayer)
+
+        let puckPairity = (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
+        let mobility = (myMoves - theirMoves) / Math.min(1, myMoves + theirMoves)
+        let cornersCaptured = (myCorners - theirCorners) / Math.min(1, myCorners + theirCorners)
+
+        return puckPairity + 2*mobility + 3*cornersCaptured
     }
 }
 

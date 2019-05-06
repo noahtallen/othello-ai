@@ -56,7 +56,7 @@ const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }
       .filter(key => !isNaN(Number(key)))
       .map((key: any) =>
           <div key={key}>
-            <input id={key + "-kind-radio"} type="radio" onClick={() => props.setAIKind(key)} checked={key == props.selected} />
+            <input id={key + "-kind-radio"} type="radio" onChange={() => props.setAIKind(key)} checked={key == props.selected} />
             <label htmlFor={key + "-kind-radio"}> {AIKindNames[key] || AIKind[key]}</label>
           </div>
       )
