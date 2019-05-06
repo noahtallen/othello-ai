@@ -7,8 +7,7 @@ export enum ReversiCell {
 export type ReversiBoard = ReversiCell[][]
 
 export type Scores = {
-    white: number,
-    black: number
+    [kind: number /*ReversiCell*/]: number
 }
 
 export type Coordinate = {
@@ -22,4 +21,9 @@ export enum AIKind {
     Human,
     PickFirst,
     MinMaxTree,
+    OnePly,
+}
+
+export enum HeuristicKind {
+    PuckPairity
 }

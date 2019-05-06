@@ -55,15 +55,16 @@ const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }
   const options = Object.keys(AIKind)
       .filter(key => !isNaN(Number(key)))
       .map((key: any) =>
-          <option key={key} value={key}>{AIKindNames[key] || AIKind[key]}</option>
+          <div key={key}>
+            <input id={key + "-kind-radio"} type="radio" onClick={() => props.setAIKind(key)} checked={key == props.selected} />
+            <label htmlFor={key + "-kind-radio"}> {AIKindNames[key] || AIKind[key]}</label>
+          </div>
       )
 
   return (
      <HorizontalHolder>
-       <h2>Ai:</h2>
-       <AIKindDropdown
-          onChange={val => props.setAIKind(val.target.selectedIndex as AIKind)}
-          value={props.selected}>{options}</AIKindDropdown>
+       <h2>AI:</h2>
+       <AIKindDropdown>{options}</AIKindDropdown>
     </HorizontalHolder>
   )
 }
@@ -71,13 +72,13 @@ const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }
 const HorizontalHolder = styled.div`
   display: flex;
   flex-direction: row;
-  height: 30px;
   align-items: center;
 `
 
-const AIKindDropdown = styled.select`
+const AIKindDropdown = styled.div`
     font-size: 14px;
-    margin: 0px 0px 0px 15px;
+    margin-left: 30px;
+    line-height: 30px;
 `
 
 const AIKindContainer = styled.div`

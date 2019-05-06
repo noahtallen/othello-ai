@@ -22,7 +22,7 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
     const [isPlayer2Turn, setisPlayer2Turn] = React.useState(false)
     const [infoMessage, setInfoMessage] = React.useState<string>('')
 
-    const startAiMove = async () => {
+    const startAiMove = async (gameState: ReversiBoard) => {
         if (!isPlayer2Turn) {
             setisPlayer2Turn(true)
             try {
@@ -41,12 +41,12 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
         setInfoMessage('')
         if (!isPlayer2Turn || aiKind === AIKind.Human) {
             const player = isPlayer2Turn ? player2Color : playerColor
-            const newBoard = Reversi.handleCellClick(gameState, coord, player)
+            const newBoard = Reversi.applyMove(gameState, coord, player)
             if (newBoard) {
                 setGameState(newBoard)    
                 setScore(Reversi.countScores(newBoard))
                 if (aiKind !== AIKind.Human) {
-                    startAiMove()    
+                    startAiMove(newBoard)    
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
                 }

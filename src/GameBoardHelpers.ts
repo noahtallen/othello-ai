@@ -1,4 +1,4 @@
-import { ReversiBoard, ReversiCell, Scores, Coordinate, AIKind } from './models'
+import { ReversiBoard, ReversiCell, Scores, Coordinate, AIKind, HeuristicKind } from './models'
 import Directions from './Directions'
 
 export function getOppositeCellType(cell: ReversiCell): ReversiCell {
@@ -32,7 +32,7 @@ export function generateGameBoard(boardSize: number, playerColor: ReversiCell): 
 // user is the user (i.e. ReversiCell.Black) who "clicked" the cell
 // Returns null if the move was invalid
 // Returns the new board if the move was valid
-export function handleCellClick(board: ReversiBoard, coord: Coordinate, user: ReversiCell): ReversiBoard | null {
+export function applyMove(board: ReversiBoard, coord: Coordinate, user: ReversiCell): ReversiBoard | null {
     if (!isEmptyCell(board, coord)) {
         return null
     }
@@ -45,11 +45,11 @@ export function handleCellClick(board: ReversiBoard, coord: Coordinate, user: Re
     }
 
     // Convert each cell including the clicked cell
-    const newBoard = [ ...board ] // Needs to be a new memory reference or it won't update
+    const newBoard = board.map(row => [...row]) // Needs to be a new memory reference or it won't update
+    
     newBoard[coord.i][coord.j] = user
-    cellsToConvert.forEach(({ i, j }) => {
-        newBoard[i][j] = user
-    })
+    cellsToConvert.forEach(({ i, j }) => newBoard[i][j] = user)
+
     return newBoard
 }
 
@@ -105,40 +105,102 @@ function getCellsToConvert(board: ReversiBoard, startingCoordinate: Coordinate, 
 }
 
 export function countScores(board: ReversiBoard): Scores {
+    const white = ReversiCell.White
+    const black = ReversiCell.Black
+
     const allCells: Array<ReversiCell> = board.flat()
-    return allCells.reduce((total, curCell) => {
-        const isBlack = curCell === ReversiCell.Black
-        const isWhite = curCell === ReversiCell.White
-        return {
-            white: isWhite ? total.white + 1 : total.white,
-            black: isBlack ? total.black + 1 : total.black
-        }
-    }, { white: 0, black: 0})
+    const initial = { [white]: 0, [black]: 0 }
+
+    return allCells.reduce((total, curCell) => ({
+        [white]: curCell === white ? total[white] + 1 : total[white],
+        [black]: curCell === black ? total[black] + 1 : total[black]
+    }), initial)
 }
 
 const aiFunctions: { [kind: number]: (board: ReversiBoard, aiColor: ReversiCell) => ReversiBoard | null } = {
     [AIKind.Human]: (board, aiColor) => { return null },
     [AIKind.PickFirst]: (board, aiColor) => {
-        for (let i = 0; i < board.length; i++)
-        for (let j = 0; j < board.length; j++) {
-            if (board[i][j] === ReversiCell.Empty) {
-                const newBoard = handleCellClick(board, {i, j}, aiColor)
-                if (newBoard)
-                    return newBoard
-            }
-        }
-
-        return null
+        return getAllPossibleMoves(board, aiColor)[0];
+    },
+    [AIKind.OnePly]: (board, aiColor) => {
+        const hKind = HeuristicKind.PuckPairity
+        const cost = (x: ReversiBoard) => heuristics[hKind](x, aiColor)
+        return getAllPossibleMoves(board, aiColor)
+            .sort((a, b) => cost(b) - cost(a))[0];
     },
     [AIKind.MinMaxTree]: (board, aiColor) => {
-        // TODO
-        return null
+        const hKind = HeuristicKind.PuckPairity
+        return minimax(board, aiColor, heuristics[hKind])[0]
     },
 }
 
+function getAllPossibleMoves(board: ReversiBoard, aiColor: ReversiCell): ReversiBoard[] {
+    let result: ReversiBoard[] = []
+    
+    for (let i = 0; i < board.length; i++)
+    for (let j = 0; j < board.length; j++) {
+        if (board[i][j] === ReversiCell.Empty) {
+            const newBoard = applyMove(board, {i, j}, aiColor)
+            if (newBoard)
+                result.push(newBoard)
+        }
+    }
+
+    return result
+}
+
+// https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-reversiothello/
+type HeuristicFunc = (board: ReversiBoard, aiColor: ReversiCell) => number
+const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
+    [HeuristicKind.PuckPairity]: (board, aiColor) => {
+        let score = countScores(board)
+        let otherPlayer = getOppositeCellType(aiColor)
+    
+        return (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
+    }
+}
+
+const MAX_MINIMAX_DEPTH = 5;
+function minimax(board: ReversiBoard, aiColor: ReversiCell, heuristic: HeuristicFunc, depth: number = 0, isMaximizingPlayer: boolean = true, alpha: number = Number.NEGATIVE_INFINITY, beta: number = Number.POSITIVE_INFINITY): [ReversiBoard | null, number] {
+    if (depth > MAX_MINIMAX_DEPTH || !areValidMoves(board))
+        return [board, heuristic(board, aiColor)]
+
+    var children = getAllPossibleMoves(board, aiColor)
+
+    if (isMaximizingPlayer)
+        return findBestMinimaxChild(children, aiColor, heuristic, isMaximizingPlayer, depth, alpha, beta, Math.max, Number.NEGATIVE_INFINITY)
+    else
+        return findBestMinimaxChild(children, aiColor, heuristic, isMaximizingPlayer, depth, alpha, beta, Math.min, Number.POSITIVE_INFINITY)
+}
+
+function findBestMinimaxChild(children: ReversiBoard[], aiColor: ReversiCell, heuristic: HeuristicFunc, isMaximizingPlayer: boolean, depth: number, alpha: number, beta: number, choose: (a: number, b: number) => number, initial: number): [ReversiBoard | null, number] {
+    var bestBoard = null
+    var bestVal = initial
+
+    for (var i = 0; i < children.length; i++) {
+        var [_, value] = minimax(children[i], aiColor, heuristic, depth+1, !isMaximizingPlayer, alpha, beta)
+
+        bestVal = choose(bestVal, value)
+
+        if (isMaximizingPlayer)
+            alpha = choose(alpha, bestVal)
+        else 
+            beta = choose(beta, bestVal)
+
+        if (bestVal == value)
+            bestBoard = children[i]
+
+        if (beta <= alpha)
+            break
+    }
+
+    return [bestBoard, bestVal]
+}
+
+
 export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: ReversiCell): Promise<ReversiBoard> {
     // @TODO fill this in.
-    // Make sure to call `handleCellClick` once we determine which cell to click.
+    // Make sure to call `applyMove` once we determine which cell to click.
     // `getCellsToConvert` might be helpful for seeing how many possible cells you
     // could convert from a move
     return new Promise((resolve, reject) => {
@@ -161,20 +223,19 @@ export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: R
 export function areValidMoves(board: ReversiBoard): boolean {
     let blackHasMoves = false
     let whiteHasMoves = false
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board.length; j++) {
-            const blackMoves = getCellsToConvert(board, {i, j}, ReversiCell.Black)
-            const whiteMoves = getCellsToConvert(board, {i, j}, ReversiCell.White)
-            if (blackMoves.length) {
-                blackHasMoves = true
-            }
-            if (whiteMoves.length) {
-                whiteHasMoves = true
-            }
-            // As soon as both players have possible valid moves, return true
-            if (whiteHasMoves && blackHasMoves) {
-                return true
-            }
+    for (let i = 0; i < board.length; i++)
+    for (let j = 0; j < board.length; j++) {
+        const blackMoves = getCellsToConvert(board, {i, j}, ReversiCell.Black)
+        const whiteMoves = getCellsToConvert(board, {i, j}, ReversiCell.White)
+        if (blackMoves.length) {
+            blackHasMoves = true
+        }
+        if (whiteMoves.length) {
+            whiteHasMoves = true
+        }
+        // As soon as both players have possible valid moves, return true
+        if (whiteHasMoves && blackHasMoves) {
+            return true
         }
     }
     return blackHasMoves && whiteHasMoves
