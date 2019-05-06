@@ -10,7 +10,7 @@ const AIKindNames: { [kind: number]: string } = {
   [AIKind.PickFirst]: "Make First Available Move",
   [AIKind.MinMaxTree]: "Min Max Tree",
   [AIKind.Human]: "Human",
-  [AIKind.OnePly]: "One-Ply Best First",
+  [AIKind.OnePly]: "One-Ply Best",
 }
 
 const App = () => {
@@ -54,8 +54,9 @@ const App = () => {
 
 const AIKindPicker = (props: { selected: AIKind, setAIKind(kind: AIKind): void }) => {
   const options = Object.keys(AIKind)
-      .filter(key => !isNaN(Number(key)))
-      .map((key: any) =>
+      .map(Number)
+      .filter(key => !isNaN(key))
+      .map(key =>
           <div key={key}>
             <input id={key + "-kind-radio"} type="radio" onChange={() => props.setAIKind(key)} checked={key == props.selected} />
             <label htmlFor={key + "-kind-radio"}> {AIKindNames[key] || AIKind[key]}</label>
