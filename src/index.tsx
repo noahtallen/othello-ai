@@ -83,14 +83,9 @@ const AIKindDropdown = styled.div`
     line-height: 30px;
 `
 
-const AIKindContainer = styled.div`
-    font-style: italic;
-    padding: 10px;
-    padding-top: 0;
-`
-
 const MainTitle = styled.h1`
   margin-bottom: 50px;
+  font-family: sans-serif;
 `
 const StartArea = styled.div`
   display: flex;

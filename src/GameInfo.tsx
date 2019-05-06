@@ -60,13 +60,13 @@ const Title = styled.h2`
     margin-bottom: 10px;
     line-height: 20px;
     margin-left: 10px;
+    font-family: sans-serif;
 `
 
 const PuckSubInfo = styled.p`
     margin-bottom: 0;
     text-align: center;
     font-weight: normal;
-
 `
 export const Pucks = styled.div`
     display: flex;
