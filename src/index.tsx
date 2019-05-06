@@ -10,6 +10,7 @@ const AIKindNames: { [kind: number]: string } = {
   [AIKind.PickFirst]: "Make First Available Move",
   [AIKind.MinMaxTree]: "Min Max Tree",
   [AIKind.Human]: "Human",
+  [AIKind.OnePly]: "One-Ply Best First",
 }
 
 const App = () => {
