@@ -157,23 +157,33 @@ function getCornersCaptured(board: ReversiBoard, player: ReversiCell): number {
 }
 
 // https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-reversiothello/
+export function getHeuristics(board: ReversiBoard, aiColor: ReversiCell) {
+    let score = countScores(board)
+    let otherPlayer = getOppositeCellType(aiColor)
+
+    let myMoves = getAllPossibleMoves(board, aiColor).length
+    let theirMoves = getAllPossibleMoves(board, otherPlayer).length
+
+    let myCorners = getCornersCaptured(board, aiColor)
+    let theirCorners = getCornersCaptured(board, otherPlayer)
+
+    let puckPairity = (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
+    let mobility = (myMoves - theirMoves) / Math.max(1, myMoves + theirMoves)
+    let cornersCaptured = (myCorners - theirCorners) / Math.max(1, myCorners + theirCorners)
+
+    return {
+        puckPairity,
+        mobility,
+        cornersCaptured,
+    }
+}
+
 type HeuristicFunc = (board: ReversiBoard, aiColor: ReversiCell) => number
 const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
     [HeuristicKind.PuckPairity]: (board, aiColor) => {
-        let score = countScores(board)
-        let otherPlayer = getOppositeCellType(aiColor)
+        let all = getHeuristics(board, aiColor)
 
-        let myMoves = getAllPossibleMoves(board, aiColor).length
-        let theirMoves = getAllPossibleMoves(board, otherPlayer).length
-
-        let myCorners = getCornersCaptured(board, aiColor)
-        let theirCorners = getCornersCaptured(board, otherPlayer)
-
-        let puckPairity = (score[aiColor] - score[otherPlayer] ) / (score[aiColor] + score[otherPlayer])
-        let mobility = (myMoves - theirMoves) / Math.max(1, myMoves + theirMoves)
-        let cornersCaptured = (myCorners - theirCorners) / Math.max(1, myCorners + theirCorners)
-
-        return puckPairity + 2*mobility + 3*cornersCaptured
+        return all.puckPairity + 2*all.mobility + 3*all.cornersCaptured
     }
 }
 
@@ -235,6 +245,7 @@ export async function makeAiMove(board: ReversiBoard, aiKind: AIKind, aiColor: R
             if (trackTime && newBoard) {
                 console.timeEnd('ai_turn_execution_time')
                 console.log(`Number of Filled Cells: ${getNumberOfFilledCells(newBoard)}`)
+                console.log(getHeuristics(newBoard, aiColor))
             }
             if (newBoard)
                 resolve(newBoard)
