@@ -183,7 +183,7 @@ const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
     [HeuristicKind.PuckPairity]: (board, aiColor) => {
         let all = getHeuristics(board, aiColor)
 
-        return 10*all.puckPairity + all.mobility + 2*all.cornersCaptured
+        return all.puckPairity + 8*all.mobility + 10*all.cornersCaptured
     }
 }
 
