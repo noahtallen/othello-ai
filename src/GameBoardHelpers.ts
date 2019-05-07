@@ -189,7 +189,7 @@ const heuristics: { [x: number /* HeuristicKind */]: HeuristicFunc } = {
 
 const MAX_MINIMAX_DEPTH = 5;
 function minimax(board: ReversiBoard, aiColor: ReversiCell, heuristic: HeuristicFunc, depth: number = 0, isMaximizingPlayer: boolean = true, alpha: number = Number.NEGATIVE_INFINITY, beta: number = Number.POSITIVE_INFINITY): [ReversiBoard | null, number] {
-    if (depth > MAX_MINIMAX_DEPTH || !areValidMoves(board))
+    if (depth > MAX_MINIMAX_DEPTH || !doesPlayerHaveValidMoves(board, aiColor))
         return [board, heuristic(board, aiColor)]
 
     var children = getAllPossibleMoves(board, aiColor)
