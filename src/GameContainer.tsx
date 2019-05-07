@@ -26,16 +26,18 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
     const startAiMove = async (gameState: ReversiBoard) => {
         if (!isPlayer2Turn) {
             setisPlayer2Turn(true)
-            // Check for the AI:
-            preTurnCheck(true, gameState)
+            // Check if the AI should/could make a move;
+            if (!shouldTurnContinue(true, gameState)) {
+                return // Stop if it switched the turn to the other player, or if it stopped the game.
+            }
             try {
                 setInfoMessage('')
                 const newBoard = await Reversi.makeAiMove(gameState, aiKind, player2Color)
                 setGameState(newBoard)
                 setScore(Reversi.countScores(newBoard))
                 setisPlayer2Turn(false)
-                // Check once it's back to the current player:
-                preTurnCheck(false, newBoard)    
+                // Check if the current player should/could make a move
+                shouldTurnContinue(false, newBoard)    
             } catch (e) {
                 setInfoMessage('The AI couldn\'t make a move')
             }
@@ -55,7 +57,7 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
                     // Check for the next player if it's human vs human:
-                    preTurnCheck(!isPlayer2Turn, newBoard)
+                    shouldTurnContinue(!isPlayer2Turn, newBoard)
                 }
             } else {
                 setInfoMessage('Invalid move. Please try again.')
@@ -65,7 +67,11 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
         }
     }
 
-    const preTurnCheck = (isPlayer2Turn: boolean, gameState: ReversiBoard) => {
+    // Returns true if it should continue execution.
+    // NOTE WELL, there is a side effect to this. It will do the following:
+    // - If one player does not have a valid move, it give the turn to the other player.
+    // - If BOTH players do not have valid moves, it stops the game. 
+    const shouldTurnContinue = (isPlayer2Turn: boolean, gameState: ReversiBoard): boolean => {
         const curPlayer = isPlayer2Turn ? player2Color : playerColor
         const otherPlayer = isPlayer2Turn ? playerColor : player2Color
         const areValidMoves = Reversi.doesPlayerHaveValidMoves(gameState, curPlayer)
@@ -78,11 +84,14 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
                 }
+                return false
             } else {
                 // Game Over if neither party can  make moves at this point
                 setIsGameOver(true)
+                return false
             }
         }
+        return true
     }
 
     return <Wrapper>
