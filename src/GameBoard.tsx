@@ -6,7 +6,6 @@ import GameOver from './GameOver';
 type BoardProps = {
     gameState: ReversiBoard,
     onClickCell: (coord: Coordinate) => void,
-    infoMessage: string
     score: Scores
     playerColor: ReversiCell
     isGameOver: boolean
@@ -16,16 +15,15 @@ type BoardProps = {
 // of an individual cell or row should never change. Though you'd
 // nromally have a real id of some sort, the unique identifier in
 // this case is actually the index!. 
-export default function GameBoard({ isGameOver, gameState, onClickCell, infoMessage, score, playerColor }: BoardProps) {
+export default function GameBoard({ isGameOver, gameState, onClickCell, score, playerColor }: BoardProps) {
     return (
     <TableArea>
-        <InfoText>{infoMessage}</InfoText>
+        {isGameOver && <GameOver score={score} playerColor={playerColor}/> }
         <Table>
-            {isGameOver && <GameOver score={score} playerColor={playerColor}/> }
             <tbody>{gameState.map((row, i) =>
                 <tr key={i} >
                     {row.map((cell, j) => {
-                        const boundCellClickHandler = () => onClickCell({i, j})
+                        const boundCellClickHandler = () => !isGameOver && onClickCell({i, j})
                         return <GameCell cell={cell} key={j} onClick={boundCellClickHandler}/>
                     })}
                 </tr>
@@ -51,14 +49,7 @@ const GameCell = ({ cell, onClick }: CellProps) => {
 const TableArea = styled.div`
     display: flex;
     flex-direction: column;
-`
-const InfoText = styled.p`
-    font-size: 15px;
-    height: 20px;
-    margin-top: 0px;
-    margin-bottom: 15px;
-    color: #9F2042;
-    line-height: 20px;
+    position: relative;
 `
 
 const Table = styled.table`

@@ -27,3 +27,8 @@ export enum AIKind {
 export enum HeuristicKind {
     PuckPairity
 }
+
+export type InfoMessage = {
+    timestamp: Date,
+    message: string
+}

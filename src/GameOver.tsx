@@ -18,6 +18,7 @@ const GameOver = ({ score, playerColor }: Props) => {
 }
 
 const Overlay = styled.div`
+    z-index: 5;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.7);
     display: flex;

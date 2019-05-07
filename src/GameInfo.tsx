@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Puck } from './GameBoard'
 import styled from 'styled-components'
-import { Scores, ReversiCell, AIKind } from './models'
+import { Scores, ReversiCell, AIKind, InfoMessage } from './models'
 import StartButton from './StartButton'
 
 type Props = {
@@ -10,9 +10,10 @@ type Props = {
     currentTurn: ReversiCell
     aiKind: AIKind
     setIsPlaying: (isPlaying: boolean) => void
+    messages: InfoMessage[]
 }
 
-const GameInfo = ({ playerColor, score, currentTurn, aiKind, setIsPlaying }: Props) => {
+const GameInfo = ({ playerColor, score, currentTurn, aiKind, setIsPlaying, messages }: Props) => {
     const goToStart = () => setIsPlaying(false)
     return (
         <InfoContainer>
@@ -32,6 +33,7 @@ const GameInfo = ({ playerColor, score, currentTurn, aiKind, setIsPlaying }: Pro
                     hasTurn={currentTurn === ReversiCell.Black}/>
             </Pucks>
             <StartButton onClick={goToStart}>Start Over</StartButton>
+            <InfoMessages messages={messages}/>
         </InfoContainer>
     )
 }
@@ -53,6 +55,35 @@ export const PuckScore = ({ playerColor, score, scoreColor, hasTurn, aiKind }: P
         }</PuckSubInfo>
     </AbsolutePuckHolder>
 )
+
+type MessagesProps = {
+    messages: InfoMessage[]
+}
+export const InfoMessages = ({ messages }: MessagesProps) => (
+    <Messages>
+        {messages.map(({message, timestamp}, i) => (
+            <Message key={timestamp.getTime()} isFirst={i === 0}>{message}</Message>
+        ))}
+    </Messages>
+)
+
+
+const Messages = styled.ul`
+    padding-left: 10px;
+    height: 230px;
+    overflow-y: scroll;
+    border: 1px solid gray;
+`
+
+type MessageProps = {
+    isFirst: boolean
+}
+const Message = styled.li`
+    list-style-type: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: ${(props: MessageProps) => props.isFirst ? 'black' : 'gray'};
+`
 
 const Title = styled.h2`
     height: 20px;

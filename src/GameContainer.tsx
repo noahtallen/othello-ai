@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import GameBoard from './GameBoard';
 import GameInfo from './GameInfo'
-import { ReversiCell, ReversiBoard, Scores, Coordinate, AIKind } from './models';
+import { ReversiCell, ReversiBoard, Scores, Coordinate, AIKind, InfoMessage } from './models';
 import * as Reversi from './GameBoardHelpers'
 
 type Props = {
@@ -20,8 +20,17 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
     const [gameState, setGameState] = React.useState<ReversiBoard>(Reversi.generateGameBoard(boardSize, playerColor))
     const [score, setScore] = React.useState<Scores>(Reversi.countScores(gameState))
     const [isPlayer2Turn, setisPlayer2Turn] = React.useState(false)
-    const [infoMessage, setInfoMessage] = React.useState<string>('')
+    const [infoMessages, setInfoMessages] = React.useState<InfoMessage[]>([])
     const [isGameOver, setIsGameOver] = React.useState(false)
+
+    const setInfoMessage = (curMessages: InfoMessage[], message: string) => {
+        const newMessage = {
+            timestamp: new Date(),
+            message
+        }
+        const messages = [newMessage, ...curMessages]
+        setInfoMessages(messages)
+    }
 
     const startAiMove = async (gameState: ReversiBoard) => {
         if (!isPlayer2Turn) {
@@ -31,7 +40,6 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 return // Stop if it switched the turn to the other player, or if it stopped the game.
             }
             try {
-                setInfoMessage('')
                 const newBoard = await Reversi.makeAiMove(gameState, aiKind, player2Color)
                 setGameState(newBoard)
                 setScore(Reversi.countScores(newBoard))
@@ -39,13 +47,12 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 // Check if the current player should/could make a move
                 shouldTurnContinue(false, newBoard)    
             } catch (e) {
-                setInfoMessage('The AI couldn\'t make a move')
+                setInfoMessage(infoMessages, 'The AI couldn\'t make a move')
             }
         }
     }
 
     const onClickCell = (coord: Coordinate) => {
-        setInfoMessage('')
         if (!isPlayer2Turn || aiKind === AIKind.Human) {
             const player = isPlayer2Turn ? player2Color : playerColor
             const newBoard = Reversi.applyMove(gameState, coord, player)
@@ -53,17 +60,17 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 setGameState(newBoard)    
                 setScore(Reversi.countScores(newBoard))
                 if (aiKind !== AIKind.Human) {
-                    startAiMove(newBoard)    
+                    startAiMove(newBoard)
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
                     // Check for the next player if it's human vs human:
                     shouldTurnContinue(!isPlayer2Turn, newBoard)
                 }
             } else {
-                setInfoMessage('Invalid move. Please try again.')
+                setInfoMessage(infoMessages, 'Invalid move. Please try again.')
             }
         } else {
-            setInfoMessage('Please wait for the AI to finish.')
+            setInfoMessage(infoMessages, 'Please wait for the AI to finish.')
         }
     }
 
@@ -84,6 +91,9 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                 } else {
                     setisPlayer2Turn(!isPlayer2Turn)
                 }
+                const activePlayer = isPlayer2Turn ? aiKind === AIKind.Human ? 'Player 2' : 'AI' : 'Player 1'
+                const secondPerson = !isPlayer2Turn ? 'Player 1' : aiKind === AIKind.Human ? 'Player 2' : 'AI'
+                setInfoMessage(infoMessages, `${activePlayer} could not make a vlaid move. Returning turn to ${secondPerson}.`)
                 return false
             } else {
                 // Game Over if neither party can  make moves at this point
@@ -100,12 +110,12 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
             score={score}
             aiKind={aiKind}
             setIsPlaying={setIsPlaying}
+            messages={infoMessages}
             currentTurn={isPlayer2Turn ? player2Color : playerColor} />
         <GameBoard
             gameState={gameState}
             onClickCell={onClickCell}
             isGameOver={isGameOver}
-            infoMessage={infoMessage}
             score={score}
             playerColor={playerColor}/>
     </Wrapper>
