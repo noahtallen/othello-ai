@@ -92,7 +92,7 @@ export default function GameContainer({ boardSize, playerColor, aiKind, setIsPla
                     setisPlayer2Turn(!isPlayer2Turn)
                 }
                 const activePlayer = isPlayer2Turn ? aiKind === AIKind.Human ? 'Player 2' : 'AI' : 'Player 1'
-                const secondPerson = !isPlayer2Turn ? 'Player 1' : aiKind === AIKind.Human ? 'Player 2' : 'AI'
+                const secondPerson = isPlayer2Turn ? 'Player 1' : aiKind === AIKind.Human ? 'Player 2' : 'AI'
                 setInfoMessage(infoMessages, `${activePlayer} could not make a vlaid move. Returning turn to ${secondPerson}.`)
                 return false
             } else {
